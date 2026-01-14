@@ -8,7 +8,7 @@ const NAV_SECTIONS = [
     { title: 'ABOUT', url: 'about.html' },
     { title: 'SKILLS', url: 'skills.html' },
     { title: 'PROJECTS', url: 'projects.html' },
-    { title: 'CERT_ED', url: 'certificate.html' },
+    { title: 'CERTIFICATES', url: 'certificate.html' },
     { title: 'CONTACT', url: 'contact.html' }
 ];
 

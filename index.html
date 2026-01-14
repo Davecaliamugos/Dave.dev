@@ -50,38 +50,48 @@
             padding-left: 20px;
         }
 
-        /* Right Side: ID Card & Lanyard */
+        .system-status {
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
+            color: var(--cyan);
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .hero-desc {
+            opacity: 0.6;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: block;
+        }
+
+
+        /* Right Side: ID Card Zone */
         .id-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            /* Changed for better mobile alignment */
-            height: 80%;
+            justify-content: center;
+            height: calc(100vh - 120px);
+            /* Fill space below nav */
             perspective: 1500px;
-            padding-top: 50px;
-        }
+            margin-top: 100px;
+            /* Stronger clearance for Nav */
 
-        #lanyard-hook {
-            width: 50px;
-            height: 15px;
-            background: var(--cyan);
-            border-radius: 4px;
-            box-shadow: 0 0 20px var(--cyan);
-            cursor: grab;
-            z-index: 20;
-            transition: background 0.3s;
-        }
-
-        #lanyard-hook:active {
-            cursor: grabbing;
-            background: #fff;
+            background: rgba(78, 217, 255, 0.02);
+            border: 1px dashed rgba(78, 217, 255, 0.12);
+            border-radius: 30px;
+            position: relative;
+            margin-left: 5%;
+            overflow: hidden;
         }
 
         .id-card {
             width: 280px;
             height: 400px;
+            cursor: grab;
             background: var(--glass);
             border: 1px solid rgba(78, 217, 255, 0.2);
             backdrop-filter: blur(15px);
@@ -92,8 +102,11 @@
             justify-content: center;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
-            margin-top: -2px;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .id-card:active {
+            cursor: grabbing;
         }
 
         .photo-slot {
@@ -116,19 +129,42 @@
         .id-details {
             text-align: center;
             transform: translateZ(30px);
+            width: 100%;
+            padding: 0 15px;
         }
 
         .id-name {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin: 0;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
-        .id-status {
-            font-size: 0.7rem;
-            color: var(--cyan);
-            letter-spacing: 3px;
-            margin-top: 5px;
+        .id-bio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.65rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(78, 217, 255, 0.1);
+            padding-top: 15px;
+        }
+
+        .bio-item span {
+            display: block;
+            color: rgba(78, 217, 255, 0.5);
+            font-size: 0.5rem;
+            margin-bottom: 2px;
+        }
+
+        .bio-item p {
+            margin: 0;
+            color: #fff;
         }
 
 
@@ -159,15 +195,79 @@
                 border-top: 2px solid var(--cyan);
                 padding-top: 20px;
                 padding-left: 0;
+                font-size: 1rem;
             }
+
+            .intro-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .system-status {
+                font-size: 0.6rem;
+                letter-spacing: 3px;
+            }
+
 
             .id-container {
-                height: 500px;
-                /* Force height for card area */
+                height: 600px;
                 width: 100%;
+                margin-left: 0;
             }
 
+            .yarn-container {
+                display: none !important;
+            }
+        }
 
+        .yarn-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        #lanyard-hook {
+            width: 50px;
+            height: 15px;
+            background: var(--cyan);
+            border-radius: 4px;
+            box-shadow: 0 0 20px var(--cyan);
+            cursor: grab;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            transition: background 0.3s;
+        }
+
+        #lanyard-hook:active {
+            cursor: grabbing;
+            background: #fff;
+        }
+
+        /* Typing cursor animation */
+        @keyframes blink {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: var(--cyan)
+            }
+        }
+
+        #typing-text {
+            color: var(--cyan);
+            font-weight: bold;
+            border-right: 2px solid var(--cyan);
+            padding-right: 5px;
+            animation: blink 0.75s step-end infinite;
         }
     </style>
 </head>
@@ -175,7 +275,7 @@
 <body>
 
     <nav>
-        <a href="index.html" class="logo">SYNAPTIC</a>
+        <a href="index.html" class="logo">PORTFOLIO</a>
         <div class="nav-links" id="navLinks"></div>
     </nav>
 
@@ -183,24 +283,50 @@
 
     <div class="main-wrapper">
         <div class="intro-section reveal delay-1">
-            <h1>NEURAL INTERFACE</h1>
-            <p>Welcome to the Synaptic Core. I am a specialized developer focused on biomorphic architecture and kinetic
-                UI. System status: Operational.</p>
+            <div class="system-status">SYSTEM_STATUS: ONLINE</div>
+            <h1>DAVE MATHEW CAMPO</h1>
+            <p>
+                Executing protocol: <span id="typing-text"></span>
+                <span class="hero-desc">Aspiring Junior Developer specializing in building web applications.</span>
+            </p>
         </div>
 
         <div class="id-container reveal delay-2">
-            <div id="lanyard-hook"></div>
+            <div class="yarn-container" id="yarnContainer">
+                <div id="lanyard-hook"></div>
+            </div>
             <div class="id-card" id="idCard">
                 <div class="photo-slot">
-                    <img src="me.jpg" alt="Identity">
+                    <img src="assets/img/me.jpg" alt="Identity">
                 </div>
                 <div class="id-details">
-                    <p class="id-name">GEMINI_01</p>
-                    <p class="id-status">SYSTEM ARCHITECT</p>
+                    <p class="id-name">DAVE MATHEW CAMPO</p>
+                    <div class="id-bio-grid">
+                        <div class="bio-item">
+                            <span>AGE</span>
+                            <p>20</p>
+                        </div>
+                        <div class="bio-item">
+                            <span>HEIGHT</span>
+                            <p>5'6 FEET</p>
+                        </div>
+                        <div class="bio-item">
+                            <span>BDAY</span>
+                            <p>OCT 7, 2005</p>
+                        </div>
+                        <div class="bio-item">
+                            <span>STATUS</span>
+                            <p>SINGLE</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer>
+        <div class="footer-content">© 2025 SYNAPTIC_SYSTEMS // ALL_RIGHTS_RESERVED</div>
+    </footer>
 
     <canvas id="gridCanvas"></canvas>
     <canvas id="particleCanvas"></canvas>
@@ -213,20 +339,19 @@
             window.SynapticPortfolio.initNavigation('index.html');
         });
 
-        const hook = document.getElementById('lanyard-hook');
+        // Interaction Logic
         const idCard = document.getElementById('idCard');
+        const idContainer = document.querySelector('.id-container');
+        const hook = document.getElementById('lanyard-hook');
+        const yarnContainer = document.getElementById('yarnContainer');
         const gCanvas = document.getElementById('gridCanvas');
         const gCtx = gCanvas.getContext('2d');
 
-
-
-        // Lanyard Logic
         let isDragging = false;
-        let cardY = 180;
-        const originY = 180;
+        let cardY = 0;
+        const originY = 0;
 
         // 3D Tilt Logic (Restricted to Container)
-        const idContainer = document.querySelector('.id-container');
 
         idContainer.addEventListener('mousemove', (e) => {
             if (isDragging) return;
@@ -248,22 +373,20 @@
             }
         });
 
-        // Dragging Logic (Global for smooth drag but specific for card)
+        // Dragging Logic
         window.addEventListener('mousemove', (e) => {
             if (isDragging) {
-                const height = window.innerHeight;
+                const rect = idContainer.getBoundingClientRect();
                 cardY = e.clientY;
 
-                // Limit drag
-                if (cardY < 50) cardY = 50;
-                if (cardY > height - 100) cardY = height - 100;
+                // Limit drag within the container boundary
+                if (cardY < rect.top + 80) cardY = rect.top + 80;
+                if (cardY > rect.bottom - 120) cardY = rect.bottom - 120;
 
                 const stretch = cardY - originY;
-                // Stretch Rotation: Increases as you pull down
-                // Max rotation around 60deg
                 const stretchRot = Math.min(60, 15 + (stretch * 0.15));
 
-                hook.style.transform = `translateY(${stretch}px)`;
+                hook.style.transform = `translateX(-50%) translateY(${stretch}px)`;
                 idCard.style.transform = `translateY(${stretch}px) rotateX(${stretchRot}deg)`;
             }
         });
@@ -277,15 +400,16 @@
         window.addEventListener('touchmove', (e) => {
             if (isDragging) {
                 const touch = e.touches[0];
-                const height = window.innerHeight;
+                const rect = idContainer.getBoundingClientRect();
                 cardY = touch.clientY;
-                if (cardY < 50) cardY = 50;
-                if (cardY > height - 100) cardY = height - 100;
+
+                if (cardY < rect.top + 80) cardY = rect.top + 80;
+                if (cardY > rect.bottom - 120) cardY = rect.bottom - 120;
 
                 const stretch = cardY - originY;
                 const stretchRot = Math.min(60, 15 + (stretch * 0.15));
 
-                hook.style.transform = `translateY(${stretch}px)`;
+                hook.style.transform = `translateX(-50%) translateY(${stretch}px)`;
                 idCard.style.transform = `translateY(${stretch}px) rotateX(${stretchRot}deg)`;
             }
         });
@@ -307,78 +431,92 @@
         function snapBack() {
             const snap = setInterval(() => {
                 cardY += (originY - cardY) * 0.15;
-                hook.style.transform = `translateY(${cardY - originY}px)`;
-                idCard.style.transform = `translateY(${cardY - originY}px)`;
-                if (Math.abs(cardY - originY) < 0.1) {
+                const offset = cardY - originY;
+                hook.style.transform = `translateX(-50%) translateY(${offset}px)`;
+                idCard.style.transform = `translateY(${offset}px)`;
+                if (Math.abs(offset) < 0.1) {
                     cardY = originY;
+                    hook.style.transform = `translateX(-50%) translateY(0px)`;
+                    idCard.style.transform = `translateY(0px)`;
                     clearInterval(snap);
                 }
             }, 16);
         }
 
-        function drawLanyard() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            // Clear only if needed, or let background system handle it?
-            // The background system clears its own canvas. This is drawing on gridCanvas?
-            // Wait, common.js BackgroundSystem uses gridCanvas and particleCanvas.
-            // If we use gridCanvas here too, we might conflict or overwrite.
-            // But common.js BackgroundSystem draws the hex grid on gridCanvas.
-            // If we also draw on gridCanvas here, we need to be careful.
-            // Actually, we should probably use a separate canvas for the lanyard string to avoid conflict 
-            // or just use common canvas but we need to match the clearRect logic.
-            // Common.js clears gridCanvas every frame in animate().
-
-            // To avoid conflict, let's create a dedicated canvas for the lanyard or just accept they might flicker if not synced.
-            // Better: Add a new canvas for lanyard string.
-            // For now, I'll assume common.js runs its loop and I run mine. 
-            // If I clear rect, I wipe the grid.
-            // I should NOT clear the whole canvas if I share it.
-            // But common.js clears it.
-
-            // Solution: Use a separate canvas specific for ID card string.
-        }
-
-        // I will add a dynamic canvas for lanyard
+        // Restoring Yarn Canvas
         const lanyardCanvas = document.createElement('canvas');
         lanyardCanvas.id = 'lanyardCanvas';
-        lanyardCanvas.style.position = 'fixed';
+        lanyardCanvas.style.position = 'absolute';
         lanyardCanvas.style.top = '0';
         lanyardCanvas.style.left = '0';
         lanyardCanvas.style.pointerEvents = 'none';
-        lanyardCanvas.style.zIndex = '5'; // Between grid and content
-        document.body.appendChild(lanyardCanvas);
+        yarnContainer.appendChild(lanyardCanvas);
 
         const lCtx = lanyardCanvas.getContext('2d');
 
         function resizeLanyard() {
-            lanyardCanvas.width = window.innerWidth;
-            lanyardCanvas.height = window.innerHeight;
+            const rect = yarnContainer.getBoundingClientRect();
+            lanyardCanvas.width = rect.width;
+            lanyardCanvas.height = rect.height;
         }
         window.addEventListener('resize', resizeLanyard);
         resizeLanyard();
 
         function animateLanyard() {
             lCtx.clearRect(0, 0, lanyardCanvas.width, lanyardCanvas.height);
+            const containerRect = yarnContainer.getBoundingClientRect();
+            const hookRect = hook.getBoundingClientRect();
+            const localX = hookRect.left - containerRect.left + (hookRect.width / 2);
+            const localY = hookRect.top - containerRect.top;
 
-            const hookPos = hook.getBoundingClientRect();
             lCtx.beginPath();
             lCtx.strokeStyle = 'rgba(78, 217, 255, 0.8)';
             lCtx.lineWidth = 2;
             lCtx.setLineDash([5, 5]);
-            // Draw from top center relative to hook horizontal pos? 
-            // Or just straight up?
-            // In layout, hook moves. String goes to top of screen.
-            lCtx.moveTo(hookPos.left + 25, 0); // Top of screen
-            lCtx.lineTo(hookPos.left + 25, hookPos.top);
+            lCtx.moveTo(localX, 0);
+            lCtx.lineTo(localX, localY);
             lCtx.stroke();
             lCtx.setLineDash([]);
-
             requestAnimationFrame(animateLanyard);
         }
-
         animateLanyard();
 
+        // Typing Effect Logic
+        const words = ["PROGRAMMER", "DESIGNER", "SYSTEM ARCHITECT", "UI ENGINEER"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 150;
+        const erasingSpeed = 100;
+        const newWordDelay = 2000;
+        const typingTarget = document.getElementById('typing-text');
+
+        function type() {
+            const currentWord = words[wordIndex];
+
+            if (isDeleting) {
+                typingTarget.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingTarget.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                isDeleting = true;
+                setTimeout(type, newWordDelay);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? erasingSpeed : typingSpeed);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(type, 1000);
+        });
     </script>
 </body>
 

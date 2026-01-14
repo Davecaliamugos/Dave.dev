@@ -54,11 +54,16 @@ nav {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 30px 60px;
+    padding: 20px 60px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     z-index: 100;
     box-sizing: border-box;
+    background-color: rgba(1, 4, 9, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(78, 217, 255, 0.1);
 }
 
 .logo {
@@ -273,6 +278,37 @@ nav {
         transform: rotate(45deg) translate(-5px, -6px);
     }
 }
+
+/* ========================================
+   FOOTER
+   ======================================== */
+footer {
+    padding: 60px 0 40px;
+    text-align: center;
+    border-top: 1px solid rgba(78, 217, 255, 0.1);
+    margin-top: 100px;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-content {
+    font-family: 'Orbitron';
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    opacity: 0.6;
+}
+
+/* Additional Responsive Tweaks */
+@media screen and (max-width: 768px) {
+
+    /* Lanyard visibility restored for mobile */
+    footer {
+        padding: 40px 0 30px;
+        margin-top: 60px;
+    }
+}
+
 
 @media screen and (max-width: 480px) {
     nav {
