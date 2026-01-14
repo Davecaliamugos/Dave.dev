@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic | Credentials</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/common.css">
+
+    <style>
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 140px 8% 80px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            margin-bottom: 50px;
+            border-bottom: 1px solid rgba(78, 217, 255, 0.2);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-title {
+            font-family: 'Orbitron';
+            color: var(--cyan);
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(78, 217, 255, 0.3);
+        }
+
+        #certSearch {
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(78, 217, 255, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'Inter';
+            width: 300px;
+            transition: 0.3s;
+        }
+
+        #certSearch:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(78, 217, 255, 0.3);
+            border-color: var(--cyan);
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #certSearch {
+                width: 100%;
+            }
+        }
+
+        /* Grid */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .cert-card {
+            background: var(--glass);
+            border: 1px solid rgba(78, 217, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--cyan);
+            box-shadow: 0 10px 30px rgba(78, 217, 255, 0.15);
+        }
+
+        .cert-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
+        }
+
+        .cert-card:hover .cert-img {
+            opacity: 0.8;
+        }
+
+        .cert-info {
+            padding: 20px;
+        }
+
+        .issuer {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .cert-title {
+            font-family: 'Orbitron';
+            font-size: 1rem;
+            color: var(--white);
+            line-height: 1.4;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            max-width: 800px;
+            width: 100%;
+            background: #050a14;
+            border: 1px solid var(--cyan);
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(78, 217, 255, 0.2);
+        }
+
+        .full-cert-img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .modal-info {
+            padding: 20px 10px 10px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron';
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin-bottom: 5px;
+        }
+
+        .modal-issuer {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--cyan);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 100px 5% 50px;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">SYNAPTIC</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h1 class="page-title">CREDENTIALS</h1>
+            <input type="text" id="certSearch" placeholder="SEARCH_CREDENTIALS...">
+        </div>
+
+        <div class="cert-grid" id="certGrid"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="certModal">
+        <div style="position: relative; width: 100%; max-width: 800px;">
+            <span class="close-modal" onclick="closeCertModal()"><i class="fas fa-times"></i></span>
+            <div class="modal-content">
+                <img id="fullCertImg" src="" class="full-cert-img">
+                <div class="modal-info">
+                    <h2 class="modal-title" id="modalCertTitle">TITLE</h2>
+                    <p class="modal-issuer" id="modalCertIssuer">ISSUER</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.SynapticPortfolio.initNavigation('certificate.html');
+        });
+
+        const certs = [
+            { title: "AWS Certified Solutions Architect", issuer: "Amazon Web Services", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=AWS+Certificate" },
+            { title: "Meta Front-End Developer Professional", issuer: "Meta / Coursera", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=Meta+Certificate" },
+            { title: "Google Data Analytics Professional", issuer: "Google", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=Google+Certificate" },
+            { title: "CompTIA Security+ CE", issuer: "CompTIA", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=Security+Certificate" },
+            { title: "Deep Learning Specialization", issuer: "DeepLearning.AI", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=DeepLearning+Certificate" },
+            { title: "Ethereum Blockchain Developer", issuer: "ConsenSys", img: "https://via.placeholder.com/800x600/000000/FFFFFF?text=Blockchain+Certificate" }
+        ];
+
+        function renderCerts(data = certs) {
+            const grid = document.getElementById('certGrid');
+            grid.innerHTML = data.map((c, index) => `
+                <div class="cert-card reveal delay-${(index % 5) + 1}" onclick="openCertModal(${certs.indexOf(c)})">
+                    <img src="${c.img}" class="cert-img">
+                    <div class="cert-info">
+                        <div class="issuer">${c.issuer}</div>
+                        <div class="cert-title">${c.title}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Re-initialize animations
+            if (window.SynapticPortfolio && window.SynapticPortfolio.initRevealAnimations) {
+                window.SynapticPortfolio.initRevealAnimations();
+            }
+        }
+
+        document.getElementById('certSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = certs.filter(c =>
+                c.title.toLowerCase().includes(term) ||
+                c.issuer.toLowerCase().includes(term)
+            );
+            renderCerts(filtered);
+        });
+
+        function openCertModal(idx) {
+            const c = certs[idx];
+            document.getElementById('fullCertImg').src = c.img;
+            document.getElementById('modalCertTitle').innerText = c.title;
+            document.getElementById('modalCertIssuer').innerText = `ISSUED BY: ${c.issuer}`;
+            document.getElementById('certModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCertModal() {
+            document.getElementById('certModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.openCertModal = openCertModal;
+        window.closeCertModal = closeCertModal;
+
+        window.onclick = (e) => {
+            if (e.target == document.getElementById('certModal')) closeCertModal();
+        };
+
+        renderCerts();
+    </script>
+</body>
+
+</html>

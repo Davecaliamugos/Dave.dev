@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic | About Me</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+
+    <style>
+        /* Layout */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 140px 15% 80px;
+            /* Centered with generous padding */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--cyan);
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(78, 217, 255, 0.3);
+        }
+
+        .bio-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 60px;
+            border-left: 2px solid var(--cyan);
+            padding-left: 20px;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--cyan), transparent);
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 5px;
+            width: 9px;
+            height: 9px;
+            background: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        .time-year {
+            font-family: 'Orbitron';
+            font-size: 0.9rem;
+            color: var(--cyan);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .time-title {
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .time-desc {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 100px 20px 50px;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .bio-text {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .time-title {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .content-wrapper {
+                padding: 90px 15px 40px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">SYNAPTIC</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="bio-section reveal delay-1">
+            <h1 class="page-title">ABOUT_ME</h1>
+            <p class="bio-text">
+                I am a creative technologist with a passion for building immersive digital experiences.
+                My work bridges the gap between functional engineering and artistic expression.
+                Currently specializing in WebGL, Three.js, and React biomes.
+            </p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item reveal delay-2">
+                <div class="time-year">2024 - PRESENT</div>
+                <div class="time-title">Lead Frontend Architect</div>
+                <div class="time-desc">Spearheading the migration of legacy systems to modern Micro-Frontend
+                    architectures using Module Federation. Implementing design systems across 5+ product lines.</div>
+            </div>
+
+            <div class="timeline-item reveal delay-3">
+                <div class="time-year">2022 - 2024</div>
+                <div class="time-title">Senior Creative Developer</div>
+                <div class="time-desc">Developed award-winning marketing sites for Fortune 500 clients. Focused on WebGL
+                    interactions and performance optimization.</div>
+            </div>
+
+            <div class="timeline-item reveal delay-4">
+                <div class="time-year">2020 - 2022</div>
+                <div class="time-title">Full Stack Engineer</div>
+                <div class="time-desc">Built scalable APIs with Node.js and specialized in real-time data visualization
+                    dashboards for fintech sector.</div>
+            </div>
+
+            <div class="timeline-item reveal delay-5">
+                <div class="time-year">2018 - 2020</div>
+                <div class="time-title">UI/UX Designer & Dev</div>
+                <div class="time-desc">Started journey combining design principles with code. Created intuitive
+                    interfaces and responsive layouts.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.SynapticPortfolio.initNavigation('about.html');
+        });
+    </script>
+</body>
+
+</html>

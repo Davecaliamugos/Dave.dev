@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic | Component Demo</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.14.5/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.14.5/sweetalert2.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+
+    <style>
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 140px 8% 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron';
+            font-size: 3rem;
+            color: var(--white);
+            margin-bottom: 12px;
+            text-shadow: 0 0 15px var(--cyan);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Inter';
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(78, 217, 255, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-color);
+            transition: height 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--card-color);
+        }
+
+        .card:hover::before {
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            /* Dark theme */
+            color: var(--card-color);
+            border: 1px solid var(--card-color);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 12px;
+            font-family: 'Orbitron';
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+        }
+
+        .success {
+            --card-color: #27ae60;
+        }
+
+        .error {
+            --card-color: #e74c3c;
+        }
+
+        .warning {
+            --card-color: #f39c12;
+        }
+
+        .info {
+            --card-color: #3498db;
+        }
+
+        .question {
+            --card-color: #9b59b6;
+        }
+
+        .input {
+            --card-color: #1abc9c;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-wrapper {
+                padding: 100px 20px 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">SYNAPTIC</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="header">
+            <h1>ALERT_SYSTEM</h1>
+            <div class="subtitle">Component Library // Version 2.0</div>
+        </div>
+
+        <div class="grid">
+            <div class="card success" onclick="showSuccess()">
+                <div class="card-icon">✓</div>
+                <div class="card-title">Success</div>
+                <div class="card-description">Display positive feedback when operations complete successfully</div>
+            </div>
+
+            <div class="card error" onclick="showError()">
+                <div class="card-icon">✕</div>
+                <div class="card-title">Error</div>
+                <div class="card-description">Show clear error messages with helpful context</div>
+            </div>
+
+            <div class="card warning" onclick="showWarning()">
+                <div class="card-icon">⚠</div>
+                <div class="card-title">Warning</div>
+                <div class="card-description">Confirm important actions before proceeding</div>
+            </div>
+
+            <div class="card info" onclick="showInfo()">
+                <div class="card-icon">ℹ</div>
+                <div class="card-title">Information</div>
+                <div class="card-description">Share relevant information with users</div>
+            </div>
+
+            <div class="card question" onclick="showQuestion()">
+                <div class="card-icon">?</div>
+                <div class="card-title">Question</div>
+                <div class="card-description">Engage users with interactive prompts</div>
+            </div>
+
+            <div class="card input" onclick="showInput()">
+                <div class="card-icon">✎</div>
+                <div class="card-title">Input</div>
+                <div class="card-description">Collect user data with validated forms</div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // We init nav but allow linking back to home
+            window.SynapticPortfolio.initNavigation('main.html');
+        });
+
+        // Use standard SweetAlerts but customized if needed
+        function showSuccess() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Your operation has been completed successfully',
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#27ae60'
+            });
+        }
+
+        function showError() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Occurred',
+                text: 'Something went wrong. Please try again later.',
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#e74c3c'
+            });
+        }
+
+        function showWarning() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this action!",
+                icon: 'warning',
+                showCancelButton: true,
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#27ae60',
+                cancelButtonColor: '#95a5a6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'Your file has been deleted.',
+                        icon: 'success',
+                        background: '#050a14',
+                        color: '#fff',
+                        confirmButtonColor: '#27ae60'
+                    });
+                }
+            });
+        }
+
+        function showInfo() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Information',
+                text: 'System status is currently nominal.',
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#3498db'
+            });
+        }
+
+        function showQuestion() {
+            Swal.fire({
+                icon: 'question',
+                title: 'Need Help?',
+                text: 'Contact support channel?',
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#9b59b6'
+            });
+        }
+
+        async function showInput() {
+            const { value: email } = await Swal.fire({
+                title: 'Input Required',
+                input: 'email',
+                inputPlaceholder: 'Enter your email address',
+                background: '#050a14',
+                color: '#fff',
+                confirmButtonColor: '#1abc9c',
+                cancelButtonColor: '#95a5a6',
+                inputAttributes: {
+                    style: 'color: white; border-color: #444;'
+                }
+            });
+
+            if (email) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Received',
+                    text: `Email: ${email}`,
+                    background: '#050a14',
+                    color: '#fff',
+                    confirmButtonColor: '#27ae60'
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

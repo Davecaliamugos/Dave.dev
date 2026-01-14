@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic | Archive</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    <link rel="stylesheet" href="styles/common.css">
+
+    <style>
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 140px 8% 80px;
+            min-height: 100vh;
+        }
+
+        .filter-container {
+            margin-bottom: 50px;
+            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(78, 217, 255, 0.2);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            /* Responsive */
+            gap: 20px;
+        }
+
+        .filter-container h1 {
+            font-family: 'Orbitron';
+            color: var(--cyan);
+            margin: 0;
+            text-shadow: 0 0 10px rgba(78, 217, 255, 0.4);
+        }
+
+        #projectSearch {
+            padding: 12px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(78, 217, 255, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'Inter';
+            width: 300px;
+            transition: 0.3s;
+        }
+
+        #projectSearch:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(78, 217, 255, 0.3);
+            border-color: var(--cyan);
+        }
+
+        /* Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--glass);
+            border: 1px solid rgba(78, 217, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(78, 217, 255, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-thumb {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(78, 217, 255, 0.1);
+        }
+
+        .project-info {
+            padding: 20px;
+        }
+
+        .project-tag {
+            font-size: 0.7rem;
+            color: var(--cyan);
+            font-family: 'Orbitron';
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            /* Responsive Padding */
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1000px;
+            background: #050a14;
+            border: 1px solid var(--cyan);
+            border-radius: 15px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            height: 600px;
+            box-shadow: 0 0 50px rgba(78, 217, 255, 0.2);
+            position: relative;
+        }
+
+        .slider-box {
+            background: black;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: var(--cyan);
+            color: black;
+        }
+
+        .modal-details {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .modal-tech-stack {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .modal-tech-stack i {
+            font-size: 1.6rem;
+            color: var(--white);
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .modal-tech-stack i:hover {
+            color: var(--cyan);
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+
+        .action-container {
+            margin-top: auto;
+            padding-top: 30px;
+        }
+
+        .execute-btn {
+            opacity: 1;
+            border: 1px solid var(--cyan);
+            padding: 12px 25px;
+            display: inline-block;
+            color: var(--cyan);
+            text-decoration: none;
+            font-family: 'Orbitron';
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .execute-btn:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--cyan);
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--cyan);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Orbitron';
+        }
+
+        /* Responsive Modal */
+        @media (max-width: 900px) {
+            .modal-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: 250px 1fr;
+                /* Image top, details bottom */
+                height: 90vh;
+            }
+
+            .slider-box {
+                height: 100%;
+                /* In grid row */
+            }
+
+            .modal-details {
+                padding: 25px;
+            }
+
+            .content-wrapper {
+                padding: 100px 5% 50px;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #projectSearch {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">SYNAPTIC</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="filter-container">
+            <h1>PROJECT_ARCHIVE</h1>
+            <input type="text" id="projectSearch" placeholder="SEARCH_BY_NAME...">
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <div class="slider-box">
+                <img id="mainImage" src="" class="slider-img">
+                <span class="slide-counter" id="slideCount">1 / 1</span>
+                <div class="slider-nav">
+                    <button class="nav-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-btn" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="modal-details">
+                <span class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></span>
+                <span class="project-tag" id="modalTag">CATEGORY</span>
+                <h2 class="project-title" id="modalTitle" style="font-size: 1.8rem; margin: 15px 0;">PROJECT_TITLE</h2>
+
+                <div class="modal-tech-stack" id="modalTechStack"></div>
+
+                <p style="line-height: 1.8; color: rgba(255,255,255,0.7); font-size: 0.9rem;" id="modalDesc"></p>
+                <div class="action-container">
+                    <a href="#" class="execute-btn">EXECUTE_LIVE_PREVIEW</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.SynapticPortfolio.initNavigation('projects.html');
+        });
+
+        const projects = [
+            {
+                title: "NEUROMANCER AI",
+                tag: "Machine Learning",
+                icons: ["devicon-python-plain", "devicon-tensorflow-original", "devicon-pytorch-original"],
+                desc: "A neural network visualization tool that maps real-time data processing into 3D synaptic structures. Built to visualize complex decision trees in autonomous systems.",
+                images: ["https://picsum.photos/id/0/800/600", "https://picsum.photos/id/1/800/600", "https://picsum.photos/id/2/800/600"]
+            },
+            {
+                title: "HYPERION UI",
+                tag: "Interface Design",
+                icons: ["devicon-react-original", "devicon-tailwindcss-plain", "devicon-figma-plain"],
+                desc: "A futuristic design system built for high-speed data manipulation environments. Features glassmorphism, kinetic interactions, and sub-millisecond render times.",
+                images: ["https://picsum.photos/id/3/800/600", "https://picsum.photos/id/4/800/600"]
+            },
+            {
+                title: "VOID_OS",
+                tag: "System Kernel",
+                icons: ["devicon-c-plain", "devicon-linux-plain", "devicon-bash-plain"],
+                desc: "A minimal, security-focused operating system shell with a focus on command-line efficiency and zero-trust architecture.",
+                images: ["https://picsum.photos/id/5/800/600", "https://picsum.photos/id/6/800/600"]
+            },
+            {
+                title: "CYBER_WATCH",
+                tag: "Web Security",
+                icons: ["devicon-nodejs-plain", "devicon-mongodb-plain", "devicon-docker-plain"],
+                desc: "A real-time threat detection dashboard used for monitoring network anomalies. Aggregates logs from 50+ sources in real-time.",
+                images: ["https://picsum.photos/id/7/800/600", "https://picsum.photos/id/8/800/600"]
+            },
+            {
+                title: "AETHER COMM",
+                tag: "Blockchain",
+                icons: ["devicon-go-plain", "devicon-rust-plain", "devicon-javascript-plain"],
+                desc: "A decentralized communication protocol ensuring end-to-end encryption across global nodes. Built on a custom layer-2 solution.",
+                images: ["https://picsum.photos/id/9/800/600", "https://picsum.photos/id/10/800/600"]
+            }
+        ];
+
+        let currentProjectIdx = 0;
+        let currentSlideIdx = 0;
+
+        function renderProjects(data) {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = data.map((p, index) => `
+                <div class="project-card reveal delay-${(index % 5) + 1}" onclick="openModal(${projects.indexOf(p)})">
+                    <img src="${p.images[0]}" class="project-thumb">
+                    <div class="project-info">
+                        <span class="project-tag">${p.tag}</span>
+                        <div class="project-title">${p.title}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Re-initialize animations for new cards
+            if (window.SynapticPortfolio && window.SynapticPortfolio.initRevealAnimations) {
+                window.SynapticPortfolio.initRevealAnimations();
+            }
+        }
+
+        function openModal(idx) {
+            currentProjectIdx = idx;
+            currentSlideIdx = 0;
+            const p = projects[idx];
+
+            document.getElementById('modalTitle').innerText = p.title;
+            document.getElementById('modalTag').innerText = p.tag;
+            document.getElementById('modalDesc').innerText = p.desc;
+
+            const stackContainer = document.getElementById('modalTechStack');
+            stackContainer.innerHTML = p.icons.map(icon => `<i class="${icon}"></i>`).join('');
+
+            updateSlide();
+
+            document.getElementById('projectModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Lock scroll
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Unlock scroll
+        }
+
+        function updateSlide() {
+            const p = projects[currentProjectIdx];
+            document.getElementById('mainImage').src = p.images[currentSlideIdx];
+            document.getElementById('slideCount').innerText = `${currentSlideIdx + 1} / ${p.images.length}`;
+        }
+
+        window.changeSlide = function (dir) { // Attached to window for HTML access
+            const len = projects[currentProjectIdx].images.length;
+            currentSlideIdx = (currentSlideIdx + dir + len) % len;
+            updateSlide();
+        };
+
+        // Search Logic
+        document.getElementById('projectSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = projects.filter(p => p.title.toLowerCase().includes(term));
+            renderProjects(filtered);
+        });
+
+        // Close on outside click
+        window.onclick = (e) => {
+            const modal = document.getElementById('projectModal');
+            if (e.target == modal) closeModal();
+        };
+
+        // Expose functions to window
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+
+        // Init
+        renderProjects(projects);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synaptic Portfolio | Home</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        /* Main Content Layout */
+        .main-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+            padding: 0 8%;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Left Side: Text */
+        .intro-section {
+            flex: 1;
+            max-width: 500px;
+            pointer-events: none;
+        }
+
+        .intro-section h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: var(--cyan);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(78, 217, 255, 0.4);
+        }
+
+        .intro-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            border-left: 2px solid var(--cyan);
+            padding-left: 20px;
+        }
+
+        /* Right Side: ID Card & Lanyard */
+        .id-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            /* Changed for better mobile alignment */
+            height: 80%;
+            perspective: 1500px;
+            padding-top: 50px;
+        }
+
+        #lanyard-hook {
+            width: 50px;
+            height: 15px;
+            background: var(--cyan);
+            border-radius: 4px;
+            box-shadow: 0 0 20px var(--cyan);
+            cursor: grab;
+            z-index: 20;
+            transition: background 0.3s;
+        }
+
+        #lanyard-hook:active {
+            cursor: grabbing;
+            background: #fff;
+        }
+
+        .id-card {
+            width: 280px;
+            height: 400px;
+            background: var(--glass);
+            border: 1px solid rgba(78, 217, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            margin-top: -2px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .photo-slot {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid var(--cyan);
+            overflow: hidden;
+            margin-bottom: 25px;
+            background: #000;
+            transform: translateZ(40px);
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .id-details {
+            text-align: center;
+            transform: translateZ(30px);
+        }
+
+        .id-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .id-status {
+            font-size: 0.7rem;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+
+
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .main-wrapper {
+                flex-direction: column;
+                padding-top: 100px;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+
+            body {
+                overflow-y: auto;
+            }
+
+            /* Enable scroll on mobile */
+
+            .intro-section {
+                text-align: center;
+                margin-bottom: 50px;
+            }
+
+            .intro-section p {
+                border-left: none;
+                border-top: 2px solid var(--cyan);
+                padding-top: 20px;
+                padding-left: 0;
+            }
+
+            .id-container {
+                height: 500px;
+                /* Force height for card area */
+                width: 100%;
+            }
+
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">SYNAPTIC</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+
+
+    <div class="main-wrapper">
+        <div class="intro-section reveal delay-1">
+            <h1>NEURAL INTERFACE</h1>
+            <p>Welcome to the Synaptic Core. I am a specialized developer focused on biomorphic architecture and kinetic
+                UI. System status: Operational.</p>
+        </div>
+
+        <div class="id-container reveal delay-2">
+            <div id="lanyard-hook"></div>
+            <div class="id-card" id="idCard">
+                <div class="photo-slot">
+                    <img src="me.jpg" alt="Identity">
+                </div>
+                <div class="id-details">
+                    <p class="id-name">GEMINI_01</p>
+                    <p class="id-status">SYSTEM ARCHITECT</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="particleCanvas"></canvas>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <script src="js/common.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            window.SynapticPortfolio.initNavigation('index.html');
+        });
+
+        const hook = document.getElementById('lanyard-hook');
+        const idCard = document.getElementById('idCard');
+        const gCanvas = document.getElementById('gridCanvas');
+        const gCtx = gCanvas.getContext('2d');
+
+
+
+        // Lanyard Logic
+        let isDragging = false;
+        let cardY = 180;
+        const originY = 180;
+
+        // 3D Tilt Logic (Restricted to Container)
+        const idContainer = document.querySelector('.id-container');
+
+        idContainer.addEventListener('mousemove', (e) => {
+            if (isDragging) return;
+            // Only strictly if not dragging
+            const rect = idContainer.getBoundingClientRect();
+            const width = rect.width;
+            const height = rect.height;
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const rotY = ((x - (width / 2)) / (width / 2)) * 45;
+            const rotX = ((y - (height / 2)) / (height / 2)) * -20;
+            idCard.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+        });
+
+        idContainer.addEventListener('mouseleave', () => {
+            if (!isDragging) {
+                idCard.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            }
+        });
+
+        // Dragging Logic (Global for smooth drag but specific for card)
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const height = window.innerHeight;
+                cardY = e.clientY;
+
+                // Limit drag
+                if (cardY < 50) cardY = 50;
+                if (cardY > height - 100) cardY = height - 100;
+
+                const stretch = cardY - originY;
+                // Stretch Rotation: Increases as you pull down
+                // Max rotation around 60deg
+                const stretchRot = Math.min(60, 15 + (stretch * 0.15));
+
+                hook.style.transform = `translateY(${stretch}px)`;
+                idCard.style.transform = `translateY(${stretch}px) rotateX(${stretchRot}deg)`;
+            }
+        });
+
+        // Touch support for dragging
+        hook.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            e.preventDefault();
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDragging) {
+                const touch = e.touches[0];
+                const height = window.innerHeight;
+                cardY = touch.clientY;
+                if (cardY < 50) cardY = 50;
+                if (cardY > height - 100) cardY = height - 100;
+
+                const stretch = cardY - originY;
+                const stretchRot = Math.min(60, 15 + (stretch * 0.15));
+
+                hook.style.transform = `translateY(${stretch}px)`;
+                idCard.style.transform = `translateY(${stretch}px) rotateX(${stretchRot}deg)`;
+            }
+        });
+
+        window.addEventListener('touchend', () => {
+            if (isDragging) {
+                isDragging = false;
+                snapBack();
+            }
+        });
+
+        hook.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            snapBack();
+        });
+
+        function snapBack() {
+            const snap = setInterval(() => {
+                cardY += (originY - cardY) * 0.15;
+                hook.style.transform = `translateY(${cardY - originY}px)`;
+                idCard.style.transform = `translateY(${cardY - originY}px)`;
+                if (Math.abs(cardY - originY) < 0.1) {
+                    cardY = originY;
+                    clearInterval(snap);
+                }
+            }, 16);
+        }
+
+        function drawLanyard() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            // Clear only if needed, or let background system handle it?
+            // The background system clears its own canvas. This is drawing on gridCanvas?
+            // Wait, common.js BackgroundSystem uses gridCanvas and particleCanvas.
+            // If we use gridCanvas here too, we might conflict or overwrite.
+            // But common.js BackgroundSystem draws the hex grid on gridCanvas.
+            // If we also draw on gridCanvas here, we need to be careful.
+            // Actually, we should probably use a separate canvas for the lanyard string to avoid conflict 
+            // or just use common canvas but we need to match the clearRect logic.
+            // Common.js clears gridCanvas every frame in animate().
+
+            // To avoid conflict, let's create a dedicated canvas for the lanyard or just accept they might flicker if not synced.
+            // Better: Add a new canvas for lanyard string.
+            // For now, I'll assume common.js runs its loop and I run mine. 
+            // If I clear rect, I wipe the grid.
+            // I should NOT clear the whole canvas if I share it.
+            // But common.js clears it.
+
+            // Solution: Use a separate canvas specific for ID card string.
+        }
+
+        // I will add a dynamic canvas for lanyard
+        const lanyardCanvas = document.createElement('canvas');
+        lanyardCanvas.id = 'lanyardCanvas';
+        lanyardCanvas.style.position = 'fixed';
+        lanyardCanvas.style.top = '0';
+        lanyardCanvas.style.left = '0';
+        lanyardCanvas.style.pointerEvents = 'none';
+        lanyardCanvas.style.zIndex = '5'; // Between grid and content
+        document.body.appendChild(lanyardCanvas);
+
+        const lCtx = lanyardCanvas.getContext('2d');
+
+        function resizeLanyard() {
+            lanyardCanvas.width = window.innerWidth;
+            lanyardCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeLanyard);
+        resizeLanyard();
+
+        function animateLanyard() {
+            lCtx.clearRect(0, 0, lanyardCanvas.width, lanyardCanvas.height);
+
+            const hookPos = hook.getBoundingClientRect();
+            lCtx.beginPath();
+            lCtx.strokeStyle = 'rgba(78, 217, 255, 0.8)';
+            lCtx.lineWidth = 2;
+            lCtx.setLineDash([5, 5]);
+            // Draw from top center relative to hook horizontal pos? 
+            // Or just straight up?
+            // In layout, hook moves. String goes to top of screen.
+            lCtx.moveTo(hookPos.left + 25, 0); // Top of screen
+            lCtx.lineTo(hookPos.left + 25, hookPos.top);
+            lCtx.stroke();
+            lCtx.setLineDash([]);
+
+            requestAnimationFrame(animateLanyard);
+        }
+
+        animateLanyard();
+
+    </script>
+</body>
+
+</html>
