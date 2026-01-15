@@ -32,6 +32,49 @@ function initRevealAnimations() {
 }
 
 // ========================================
+// SYSTEM PRELOADER
+// ========================================
+function initPreloader() {
+    // Create preloader HTML if it doesn't exist
+    if (!document.querySelector('.preloader')) {
+        const preloader = document.createElement('div');
+        preloader.className = 'preloader';
+        preloader.innerHTML = `
+            <div class="loader-terminal">
+                <span class="loader-text loading-glitch" data-text="ESTABLISHING_LINK...">ESTABLISHING_LINK...</span>
+                <div class="loader-bar-container">
+                    <div class="loader-bar"></div>
+                </div>
+                <div class="loader-status">
+                    <span>SECURE_TUNNEL</span>
+                    <span>100%</span>
+                </div>
+            </div>
+        `;
+        document.body.prepend(preloader);
+    }
+
+    // Handle removal
+    const removeLoader = () => {
+        const preloader = document.querySelector('.preloader');
+        if (preloader) {
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+                setTimeout(() => {
+                    preloader.remove();
+                }, 1000); // Wait for transition
+            }, 800); // Show for at least 800ms
+        }
+    };
+
+    if (document.readyState === 'complete') {
+        removeLoader();
+    } else {
+        window.addEventListener('load', removeLoader);
+    }
+}
+
+// ========================================
 // NAVIGATION INITIALIZATION
 // ========================================
 function initNavigation(currentPage) {
@@ -296,6 +339,9 @@ class BackgroundSystem {
 // AUTO-INITIALIZATION
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize preloader early
+    initPreloader();
+
     // Initialize custom cursor
     initCustomCursor();
 
@@ -311,5 +357,6 @@ window.SynapticPortfolio = {
     initNavigation,
     initCustomCursor,
     BackgroundSystem,
-    initRevealAnimations
+    initRevealAnimations,
+    initPreloader
 };
