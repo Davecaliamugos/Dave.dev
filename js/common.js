@@ -34,9 +34,15 @@ function initRevealAnimations() {
 // ========================================
 // SYSTEM PRELOADER
 // ========================================
-function initPreloader() {
-    if (!document.querySelector('.preloader')) {
-        const preloader = document.createElement('div');
+function initPreloader(customMessage, startProgress = 0) {
+    // 1. Check Internet Status
+    const isOffline = !navigator.onLine;
+    const defaultText = isOffline ? 'OFFLINE // RETRYING' : (customMessage || 'CONNECTING');
+
+    // 2. Create or Update Preloader
+    let preloader = document.querySelector('.preloader');
+    if (!preloader) {
+        preloader = document.createElement('div');
         preloader.className = 'preloader';
         preloader.innerHTML = `
             <div class="loader-content">
@@ -44,7 +50,7 @@ function initPreloader() {
                     <div class="loader-bar" id="loaderBar"></div>
                 </div>
                 <div class="loader-status">
-                    <span class="loader-text">CONNECTING</span>
+                    <span class="loader-text" id="loaderText">${defaultText}</span>
                     <span id="load-percentage">0%</span>
                 </div>
             </div>
@@ -54,33 +60,47 @@ function initPreloader() {
 
     const percElement = document.getElementById('load-percentage');
     const barElement = document.getElementById('loaderBar');
-    let progress = 0;
+    let progress = startProgress;
 
-    // Animate percentage
+    // Reset/Set initial state
+    if (percElement) percElement.innerText = Math.floor(progress) + '%';
+    if (barElement) barElement.style.width = progress + '%';
+
+    // 3. Animation Logic
     const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 15) + 5;
+        // If offline, slow down or pause at 99%
+        if (!navigator.onLine) {
+            progress += Math.random() * 0.5;
+            if (progress > 99) progress = 99;
+        } else {
+            // Slower increment if we started midway to avoid "blinking"
+            const step = startProgress > 0 ? 5 : 10;
+            progress += Math.floor(Math.random() * step) + 2;
+        }
+
         if (progress > 100) progress = 100;
 
-        if (percElement) percElement.innerText = progress + '%';
+        if (percElement) percElement.innerText = Math.floor(progress) + '%';
         if (barElement) barElement.style.width = progress + '%';
 
-        if (progress >= 100) {
+        if (progress >= 100 && navigator.onLine) {
             clearInterval(interval);
             finishLoading();
         }
-    }, 150);
+    }, 120);
 
     const finishLoading = () => {
-        const preloader = document.querySelector('.preloader');
-        if (preloader) {
-            setTimeout(() => {
-                preloader.classList.add('fade-out');
-                setTimeout(() => {
-                    preloader.remove();
-                }, 800);
-            }, 400);
-        }
+        preloader.classList.add('fade-out');
+        setTimeout(() => {
+            if (preloader.parentNode) preloader.remove();
+        }, 800);
     };
+
+    // 4. Listen for Online Status Recover
+    window.addEventListener('online', () => {
+        const textElement = document.getElementById('loaderText');
+        if (textElement) textElement.innerText = 'CONNECTION RESTORED';
+    });
 }
 
 // ========================================
@@ -123,9 +143,31 @@ function initNavigation(currentPage) {
         burger.classList.toggle('toggle');
     });
 
-    // 4. Close menu when a link is clicked
-    navLinksContainer.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
+    // 4. Dynamic Page Transitions
+    navLinksContainer.querySelectorAll('.nav-item').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const targetUrl = link.getAttribute('href');
+            const targetTitle = link.innerText;
+
+            // Only trigger if it's an internal link and not the same page
+            if (targetUrl && !targetUrl.startsWith('http') && targetUrl !== currentPage) {
+                e.preventDefault();
+
+                // Set transition state
+                sessionStorage.setItem('isNavigating', 'true');
+
+                // Show minimal overlay immediately
+                const preloader = document.createElement('div');
+                preloader.className = 'preloader';
+                preloader.innerHTML = `<div class="loader-content"><div class="loader-status"><span class="loader-text">REDIRECTING...</span></div></div>`;
+                document.body.prepend(preloader);
+
+                // Small delay for the animation to be seen
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 300);
+            }
+
             navLinksContainer.classList.remove('nav-active');
             burger.classList.remove('toggle');
         });
@@ -348,8 +390,14 @@ class BackgroundSystem {
 // AUTO-INITIALIZATION
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize preloader early
-    initPreloader();
+    // Check if we just navigated from the menu
+    const wasNavigating = sessionStorage.getItem('isNavigating');
+    if (wasNavigating) {
+        initPreloader('Connecting', 40); // Start from 40% for a "connected" feel
+        sessionStorage.removeItem('isNavigating');
+    } else {
+        initPreloader();
+    }
 
     // Initialize custom cursor
     initCustomCursor();
