@@ -35,43 +35,52 @@ function initRevealAnimations() {
 // SYSTEM PRELOADER
 // ========================================
 function initPreloader() {
-    // Create preloader HTML if it doesn't exist
     if (!document.querySelector('.preloader')) {
         const preloader = document.createElement('div');
         preloader.className = 'preloader';
         preloader.innerHTML = `
-            <div class="loader-terminal">
-                <span class="loader-text loading-glitch" data-text="Loading...">Loading...</span>
+            <div class="loader-content">
                 <div class="loader-bar-container">
-                    <div class="loader-bar"></div>
+                    <div class="loader-bar" id="loaderBar"></div>
                 </div>
                 <div class="loader-status">
-                    <span>Connecting to portfolio</span>
-                    <span>100%</span>
+                    <span class="loader-text">CONNECTING</span>
+                    <span id="load-percentage">0%</span>
                 </div>
             </div>
         `;
         document.body.prepend(preloader);
     }
 
-    // Handle removal
-    const removeLoader = () => {
+    const percElement = document.getElementById('load-percentage');
+    const barElement = document.getElementById('loaderBar');
+    let progress = 0;
+
+    // Animate percentage
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if (progress > 100) progress = 100;
+
+        if (percElement) percElement.innerText = progress + '%';
+        if (barElement) barElement.style.width = progress + '%';
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            finishLoading();
+        }
+    }, 150);
+
+    const finishLoading = () => {
         const preloader = document.querySelector('.preloader');
         if (preloader) {
             setTimeout(() => {
                 preloader.classList.add('fade-out');
                 setTimeout(() => {
                     preloader.remove();
-                }, 1000); // Wait for transition
-            }, 800); // Show for at least 800ms
+                }, 800);
+            }, 400);
         }
     };
-
-    if (document.readyState === 'complete') {
-        removeLoader();
-    } else {
-        window.addEventListener('load', removeLoader);
-    }
 }
 
 // ========================================
