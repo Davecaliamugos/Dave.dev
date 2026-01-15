@@ -41,12 +41,12 @@ function initPreloader() {
         preloader.className = 'preloader';
         preloader.innerHTML = `
             <div class="loader-terminal">
-                <span class="loader-text loading-glitch" data-text="ESTABLISHING_LINK...">ESTABLISHING_LINK...</span>
+                <span class="loader-text loading-glitch" data-text="Loading...">Loading...</span>
                 <div class="loader-bar-container">
                     <div class="loader-bar"></div>
                 </div>
                 <div class="loader-status">
-                    <span>SECURE_TUNNEL</span>
+                    <span>Connecting to portfolio</span>
                     <span>100%</span>
                 </div>
             </div>
