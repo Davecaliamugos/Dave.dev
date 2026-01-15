@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synaptic Portfolio | Home</title>
+    <meta name="theme-color" content="#010409">
+    <title>Portfolio | Home</title>
+    <link rel="icon" href="/assets/img/mylogo.png" type="image/png">
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400&display=swap"
         rel="stylesheet">
@@ -12,16 +14,17 @@
 
     <style>
         body {
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         /* Main Content Layout */
         .main-wrapper {
             display: flex;
             width: 100vw;
-            height: 100vh;
+            min-height: 100vh;
             align-items: center;
-            padding: 0 8%;
+            padding: 100px 8% 50px;
             box-sizing: border-box;
             position: relative;
             z-index: 10;
@@ -329,11 +332,11 @@
 
     <div class="main-wrapper">
         <div class="intro-section reveal delay-1">
-            <div class="system-status">SYSTEM_STATUS: ONLINE</div>
-            <h1>DAVE MATHEW</h1>
+            <h1>DAVE CAMPO</h1>
             <p>
-                Executing protocol: <span id="typing-text"></span>
-                <span class="hero-desc">Aspiring Junior Developer specializing in building web applications.</span>
+                I am <span id="typing-text"></span>
+                <span class="hero-desc">3rd Year Computer Science student and aspiring Developer specializing in
+                    building secure web applications and scalable solutions.</span>
             </p>
         </div>
 
@@ -346,23 +349,23 @@
                     <img src="assets/img/me.jpg" alt="Identity">
                 </div>
                 <div class="id-details">
-                    <p class="id-name">DAVE MATHEW CAMPO</p>
+                    <p class="id-name">DAVE CAMPO</p>
                     <div class="id-bio-grid">
                         <div class="bio-item">
-                            <span>AGE</span>
-                            <p>20</p>
+                            <span>ROLE</span>
+                            <p>WEB DEVELOPER</p>
                         </div>
                         <div class="bio-item">
-                            <span>HEIGHT</span>
-                            <p>5'6 FEET</p>
+                            <span>COURSE</span>
+                            <p>BSCS</p>
                         </div>
                         <div class="bio-item">
-                            <span>BDAY</span>
-                            <p>OCT 7, 2005</p>
+                            <span>LOCATION</span>
+                            <p>MASBATE</p>
                         </div>
                         <div class="bio-item">
-                            <span>STATUS</span>
-                            <p>SINGLE</p>
+                            <span>MAIN</span>
+                            <p>PYTHON</p>
                         </div>
                     </div>
                 </div>
@@ -370,8 +373,8 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">© 2025 SYNAPTIC_SYSTEMS // ALL_RIGHTS_RESERVED</div>
+    <footer class="reveal delay-2">
+        <div class="footer-content">© 2026 PORTFOLIO // ALL_RIGHTS_RESERVED</div>
     </footer>
 
     <canvas id="gridCanvas"></canvas>
@@ -491,46 +494,74 @@
             requestAnimationFrame(step);
         }
 
-        // Restoring Yarn Canvas
+        // Restoring Yarn Canvas with Retina/High-DPI Support
         const lanyardCanvas = document.createElement('canvas');
         lanyardCanvas.id = 'lanyardCanvas';
         lanyardCanvas.style.position = 'absolute';
         lanyardCanvas.style.top = '0';
         lanyardCanvas.style.left = '0';
+        lanyardCanvas.style.width = '100%';
+        lanyardCanvas.style.height = '100%';
         lanyardCanvas.style.pointerEvents = 'none';
         yarnContainer.appendChild(lanyardCanvas);
 
         const lCtx = lanyardCanvas.getContext('2d');
+        let dpr = window.devicePixelRatio || 1;
 
         function resizeLanyard() {
             const rect = yarnContainer.getBoundingClientRect();
-            lanyardCanvas.width = rect.width;
-            lanyardCanvas.height = rect.height;
+            dpr = window.devicePixelRatio || 1;
+            lanyardCanvas.width = rect.width * dpr;
+            lanyardCanvas.height = rect.height * dpr;
+            lCtx.scale(dpr, dpr);
         }
+
         window.addEventListener('resize', resizeLanyard);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(resizeLanyard, 100);
+        });
         resizeLanyard();
 
         function animateLanyard() {
-            lCtx.clearRect(0, 0, lanyardCanvas.width, lanyardCanvas.height);
+            lCtx.clearRect(0, 0, lanyardCanvas.width / dpr, lanyardCanvas.height / dpr);
+
             const containerRect = yarnContainer.getBoundingClientRect();
             const hookRect = hook.getBoundingClientRect();
-            const localX = hookRect.left - containerRect.left + (hookRect.width / 2);
-            const localY = hookRect.top - containerRect.top;
 
+            // Calculate local coordinates relative to the yarnContainer
+            const localX = hookRect.left - containerRect.left + (hookRect.width / 2);
+            const localY = hookRect.top - containerRect.top + 2; // Slight offset for better overlap
+
+            // Draw shadow/glow first
             lCtx.beginPath();
-            lCtx.strokeStyle = 'rgba(78, 217, 255, 0.8)';
+            lCtx.strokeStyle = 'rgba(78, 217, 255, 0.4)';
+            lCtx.lineWidth = 4;
+            lCtx.moveTo(localX, 0);
+            lCtx.lineTo(localX, localY);
+            lCtx.stroke();
+
+            // Draw core cable
+            lCtx.beginPath();
+            lCtx.strokeStyle = 'rgba(78, 217, 255, 0.9)';
             lCtx.lineWidth = 2;
-            lCtx.setLineDash([5, 5]);
+            lCtx.setLineDash([8, 4]); // Longer dashes for mobile visibility
             lCtx.moveTo(localX, 0);
             lCtx.lineTo(localX, localY);
             lCtx.stroke();
             lCtx.setLineDash([]);
+
+            // Draw a small "anchor" point at the top
+            lCtx.fillStyle = 'rgba(78, 217, 255, 1)';
+            lCtx.beginPath();
+            lCtx.arc(localX, 0, 3, 0, Math.PI * 2);
+            lCtx.fill();
+
             requestAnimationFrame(animateLanyard);
         }
         animateLanyard();
 
         // Typing Effect Logic
-        const words = ["PROGRAMMER", "DESIGNER", "SYSTEM ARCHITECT", "UI ENGINEER"];
+        const words = ["A PROGRAMMER", "A WEB DEVELOPER", "A PYTHON CODER", "A DJANGO DEV"];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;

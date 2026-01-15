@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Archive</title>
+    <meta name="theme-color" content="#010409">
+    <link rel="icon" href="/assets/img/mylogo.png" type="image/png">
+    <title>Portfolio | Projects</title>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
@@ -152,7 +154,8 @@
         .slider-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: #000;
         }
 
         .slider-nav {
@@ -253,9 +256,10 @@
         @media (max-width: 900px) {
             .modal-content {
                 grid-template-columns: 1fr;
-                grid-template-rows: 250px 1fr;
-                /* Image top, details bottom */
-                height: 90vh;
+                grid-template-rows: 350px 1.5fr;
+                /* Increased image height */
+                height: 95vh;
+                max-height: 900px;
             }
 
             .slider-box {
@@ -286,7 +290,7 @@
 <body>
 
     <nav>
-        <a href="index.html" class="logo">SYNAPTIC</a>
+        <a href="index.html" class="logo">PORTFOLIO</a>
         <div class="nav-links" id="navLinks"></div>
     </nav>
 
@@ -299,7 +303,7 @@
     </div>
 
     <footer>
-        <div class="footer-content">© 2025 SYNAPTIC_SYSTEMS // ALL_RIGHTS_RESERVED</div>
+        <div class="footer-content">© 2026 PORTFOLIO // ALL_RIGHTS_RESERVED</div>
     </footer>
 
     <!-- Modal Structure -->
@@ -343,11 +347,14 @@
 
         const projects = [
             {
-                title: "NEUROMANCER AI",
-                tag: "Machine Learning",
-                icons: ["devicon-python-plain", "devicon-tensorflow-original", "devicon-pytorch-original"],
-                desc: "A neural network visualization tool that maps real-time data processing into 3D synaptic structures. Built to visualize complex decision trees in autonomous systems.",
-                images: ["https://picsum.photos/id/0/800/600", "https://picsum.photos/id/1/800/600", "https://picsum.photos/id/2/800/600"]
+                title: "HEALTH CLINIC",
+                tag: "WEB APPLICATION",
+                icons: ["devicon-php-plain", "devicon-mysql-original", "devicon-html5-plain-wordmark",
+                    "devicon-css3-plain-wordmark",
+                    "devicon-javascript-plain",
+                    "devicon-bootstrap-plain",],
+                desc: "A comprehensive health clinic management system integrating patient records, appointment scheduling, and AI-driven diagnostics to streamline operations and enhance patient care.",
+                images: ["/assets/img/clinic/1.JPG", "/assets/img/clinic/2.JPG", "/assets/img/clinic/3.JPG", "/assets/img/clinic/4.JPG", "/assets/img/clinic/5.JPG", "/assets/img/clinic/6.JPG","/assets/img/clinic/7.JPG", "/assets/img/clinic/8.JPG", "/assets/img/clinic/9.JPG", "/assets/img/clinic/10.JPG", "/assets/img/clinic/11.JPG", "/assets/img/clinic/12.JPG",  "/assets/img/clinic/13.JPG", "/assets/img/clinic/14.JPG", "/assets/img/clinic/15.JPG", "/assets/img/clinic/16.JPG", "/assets/img/clinic/17.JPG", "/assets/img/clinic/18.JPG", "/assets/img/clinic/19.JPG", "/assets/img/clinic/20.JPG"]
             },
             {
                 title: "HYPERION UI",

@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Contact</title>
+    <meta name="theme-color" content="#010409">
+    <link rel="icon" href="/assets/img/mylogo.png" type="image/png">
+    <title>Portfolio | Secure Terminal</title>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
@@ -13,14 +15,18 @@
     <link rel="stylesheet" href="styles/common.css">
 
     <style>
-        .content-wrapper {
+        .page-wrapper {
             position: relative;
             z-index: 10;
             padding: 140px 8% 80px;
-            min-height: 100vh;
+            width: 100%;
+        }
+
+        .content-wrapper {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 60px;
         }
 
         .contact-container {
@@ -92,6 +98,61 @@
             color: white;
             text-decoration: none;
             font-size: 1rem;
+        }
+
+        .social-grid {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .social-item {
+            width: 45px;
+            height: 45px;
+            background: rgba(5, 12, 24, 0.6);
+            border: 1px solid rgba(78, 217, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .social-item:hover {
+            background: var(--cyan);
+            color: #000;
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--cyan);
+            border-color: var(--cyan);
+        }
+
+        .map-section {
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(78, 217, 255, 0.1);
+            background: rgba(5, 12, 24, 0.4);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .map-section iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(1) invert(0.9) hue-rotate(180deg) brightness(0.8);
+            opacity: 0.8;
+            transition: 0.5s;
+        }
+
+        .map-section:hover iframe {
+            filter: grayscale(0.5) invert(0.9) hue-rotate(180deg) brightness(0.9);
+            opacity: 1;
         }
 
         /* Form */
@@ -198,63 +259,81 @@
 <body>
 
     <nav>
-        <a href="index.html" class="logo">SYNAPTIC</a>
+        <a href="index.html" class="logo">PORTFOLIO</a>
         <div class="nav-links" id="navLinks"></div>
     </nav>
 
-    <div class="content-wrapper">
-        <div class="contact-container">
-            <!-- Left Info -->
-            <div class="contact-info reveal delay-1">
-                <h1>INITIATE<br>LINK</h1>
-                <p>Available for freelance contracts and full-time collaborative efforts. Transmission lines are open.
-                </p>
+    <div class="page-wrapper">
+        <h1 class="page-title reveal delay-1">CONTACT</h1>
+        <div class="content-wrapper">
+            <div class="map-section reveal delay-3">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.603332463773!2d123.2750!3d12.2250!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a165fc92c90c73%3A0x67c0f18c64448e8a!2sCabitan%2C%20Mandaon%2C%20Masbate!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            <div class="contact-container">
+                <!-- Left Info -->
+                <div class="contact-info reveal delay-1">
+                    <h1>INITIATE<br>LINK</h1>
+                    <p>Available for freelance contracts and full-time collaborative efforts. Transmission lines are
+                        open.
+                    </p>
 
-                <div class="info-item">
-                    <div class="icon-box"><i class="fas fa-envelope"></i></div>
-                    <div class="info-text">
-                        <span>EMAIL_PROTOCOL</span>
-                        <a href="mailto:hello@synaptic.dev">hello@synaptic.dev</a>
+                    <div class="info-item">
+                        <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                        <div class="info-text">
+                            <span>EMAIL_PROTOCOL</span>
+                            <a href="mailto:hello@synaptic.dev">hello@synaptic.dev</a>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="info-text">
+                            <span>COORDINATES</span>
+                            <p>Cabitan, Mandaon, Masbate</p>
+                        </div>
+                    </div>
+
+                    <div class="social-grid">
+                        <a href="https://facebook.com" class="social-item" title="Facebook"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com" class="social-item" title="Instagram"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/yourphone" class="social-item" title="WhatsApp"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://linkedin.com" class="social-item" title="LinkedIn"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com" class="social-item" title="GitHub"><i
+                                class="fab fa-github"></i></a>
+                        <a href="mailto:yourgmail@gmail.com" class="social-item" title="Gmail"><i
+                                class="fas fa-envelope"></i></a>
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
-                    <div class="info-text">
-                        <span>COORDINATES</span>
-                        <p>San Francisco, CA [Remote]</p>
+                <!-- Right Form -->
+                <form class="contact-form reveal delay-2" id="contactForm">
+                    <div class="form-group">
+                        <input type="text" name="user_name" class="form-input" placeholder="IDENTIFIER [NAME]" required>
                     </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="icon-box"><i class="fab fa-github"></i></div>
-                    <div class="info-text">
-                        <span>REPOSITORY</span>
-                        <a href="#">github.com/synaptic</a>
+                    <div class="form-group">
+                        <input type="email" name="user_email" class="form-input" placeholder="RETURN_ADDRESS [EMAIL]"
+                            required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <textarea name="message" class="form-input" placeholder="TRANSMISSION_DATA [MESSAGE]"
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">SEND TRANSMISSION</button>
+                </form>
             </div>
 
-            <!-- Right Form -->
-            <form class="contact-form reveal delay-2" id="contactForm">
-                <div class="form-group">
-                    <input type="text" name="user_name" class="form-input" placeholder="IDENTIFIER [NAME]" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" name="user_email" class="form-input" placeholder="RETURN_ADDRESS [EMAIL]"
-                        required>
-                </div>
-                <div class="form-group">
-                    <textarea name="message" class="form-input" placeholder="TRANSMISSION_DATA [MESSAGE]"
-                        required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">SEND TRANSMISSION</button>
-            </form>
+
         </div>
     </div>
 
     <footer>
-        <div class="footer-content">© 2025 SYNAPTIC_SYSTEMS // ALL_RIGHTS_RESERVED</div>
+        <div class="footer-content">© 2026 PORFOLIO // ALL_RIGHTS_RESERVED</div>
     </footer>
 
     <canvas id="gridCanvas"></canvas>
