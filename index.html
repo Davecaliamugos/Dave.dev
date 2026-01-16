@@ -35,8 +35,6 @@
             flex: 1;
             max-width: 500px;
             pointer-events: none;
-            margin-top: -40px;
-            /* Shifted upwards */
         }
 
         .intro-section h1 {
@@ -445,12 +443,8 @@
 
         const onDrag = (y) => {
             if (!isDragging) return;
-            const rect = idContainer.getBoundingClientRect();
-
-            // Interaction logic
             let deltaY = y - startY;
 
-            // Limit drag distance
             if (deltaY < -20) deltaY = -20;
             if (deltaY > 200) deltaY = 200;
 
@@ -458,8 +452,18 @@
             const stretchRot = Math.min(60, 15 + (currentY * 0.15));
             const stretchScale = 1 + (Math.abs(currentY) * 0.0002);
 
+            // Physics-based secondary motion
+            const swingZ = Math.sin(Date.now() / 200) * (currentY / 15);
+            const wiggleY = Math.cos(Date.now() / 150) * (currentY / 25);
+            const glow = Math.min(1, currentY / 200);
+
             hook.style.transform = `translateX(-50%) translateY(${currentY}px)`;
-            idCard.style.transform = `translateY(${currentY}px) rotateX(${stretchRot}deg) scale(${stretchScale})`;
+            idCard.style.transform = `translateY(${currentY}px) rotateX(${stretchRot}deg) rotateY(${wiggleY}deg) rotateZ(${swingZ}deg) scale(${stretchScale})`;
+
+            // Dynamic Shadow & Photo Zoom
+            idCard.style.boxShadow = `0 ${30 + currentY / 5}px ${60 + currentY / 2}px rgba(0, 0, 0, 0.5), 0 0 ${currentY / 3}px rgba(78, 217, 255, ${glow * 0.2})`;
+            const photo = idCard.querySelector('.photo-slot');
+            if (photo) photo.style.transform = `translateZ(40px) scale(${1 + currentY / 800})`;
         };
 
         const endDrag = () => {
@@ -489,19 +493,37 @@
         window.addEventListener('touchend', endDrag);
 
         function snapBack() {
+            let velocity = 0;
+            const tension = 0.2; // Spring stiffness
+            const friction = 0.8; // Air resistance/Damping
+
             const step = () => {
-                currentY += (originY - currentY) * 0.15;
+                const distance = originY - currentY;
+                const force = distance * tension;
+
+                velocity += force;
+                velocity *= friction;
+                currentY += velocity;
+
                 const stretchRot = Math.min(60, 15 + (currentY * 0.15));
+                const swingZ = Math.sin(Date.now() / 180) * (currentY / 12);
+                const wiggleY = Math.cos(Date.now() / 120) * (currentY / 20);
 
                 hook.style.transform = `translateX(-50%) translateY(${currentY}px)`;
-                idCard.style.transform = `translateY(${currentY}px) rotateX(${stretchRot}deg)`;
+                idCard.style.transform = `translateY(${currentY}px) rotateX(${stretchRot}deg) rotateY(${wiggleY}deg) rotateZ(${swingZ}deg)`;
 
-                if (Math.abs(currentY - originY) > 0.1) {
+                // Settle secondary effects
+                idCard.style.boxShadow = `0 30px 60px rgba(0, 0, 0, 0.5)`;
+                const photo = idCard.querySelector('.photo-slot');
+                if (photo) photo.style.transform = `translateZ(40px) scale(1)`;
+
+                // Continue if velocity or distance is significant
+                if (Math.abs(velocity) > 0.01 || Math.abs(distance) > 0.01) {
                     requestAnimationFrame(step);
                 } else {
                     currentY = originY;
                     hook.style.transform = `translateX(-50%) translateY(0px)`;
-                    idCard.style.transform = `translateY(0px) rotateX(0deg)`;
+                    idCard.style.transform = `translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
                 }
             };
             requestAnimationFrame(step);
@@ -543,27 +565,31 @@
 
             // Calculate local coordinates relative to the yarnContainer
             const localX = hookRect.left - containerRect.left + (hookRect.width / 2);
-            const localY = hookRect.top - containerRect.top + 2; // Slight offset for better overlap
+            const localY = hookRect.top - containerRect.top + 2;
 
-            // Draw shadow/glow first
+            // Add a subtle "swing" oscillation when stretched
+            const swingAmount = (currentY / 200) * 15; // Max 15px swing
+            const swingX = Math.sin(Date.now() / 200) * swingAmount;
+
+            // Draw shadow/glow with Bezier curve for "weight"
             lCtx.beginPath();
             lCtx.strokeStyle = 'rgba(78, 217, 255, 0.4)';
             lCtx.lineWidth = 4;
             lCtx.moveTo(localX, 0);
-            lCtx.lineTo(localX, localY);
+            lCtx.bezierCurveTo(localX + swingX, localY * 0.5, localX + swingX, localY * 0.8, localX, localY);
             lCtx.stroke();
 
             // Draw core cable
             lCtx.beginPath();
             lCtx.strokeStyle = 'rgba(78, 217, 255, 0.9)';
             lCtx.lineWidth = 2;
-            lCtx.setLineDash([8, 4]); // Longer dashes for mobile visibility
+            lCtx.setLineDash([8, 4]);
             lCtx.moveTo(localX, 0);
-            lCtx.lineTo(localX, localY);
+            lCtx.bezierCurveTo(localX + swingX, localY * 0.5, localX + swingX, localY * 0.8, localX, localY);
             lCtx.stroke();
             lCtx.setLineDash([]);
 
-            // Draw a small "anchor" point at the top
+            // Draw anchor
             lCtx.fillStyle = 'rgba(78, 217, 255, 1)';
             lCtx.beginPath();
             lCtx.arc(localX, 0, 3, 0, Math.PI * 2);

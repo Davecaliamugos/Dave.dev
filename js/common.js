@@ -183,36 +183,44 @@ function initCustomCursor() {
 
     if (!dot || !ring) return;
 
-    // Show custom cursor even on touch devices
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
     // Hide default cursor globally
     document.body.style.cursor = 'none';
 
-    const updateCursor = (x, y) => {
-        dot.style.left = x + 'px';
-        dot.style.top = y + 'px';
-        ring.style.left = x + 'px';
-        ring.style.top = y + 'px';
+    let mouseX = 0, mouseY = 0;
+    let dotX = 0, dotY = 0;
+    let ringX = 0, ringY = 0;
+
+    const updatePosition = (e) => {
+        if (e.touches && e.touches.length > 0) {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        } else {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        }
     };
 
-    window.addEventListener('mousemove', (e) => {
-        updateCursor(e.clientX, e.clientY);
-    });
+    window.addEventListener('mousemove', updatePosition);
+    window.addEventListener('touchstart', updatePosition, { passive: true });
+    window.addEventListener('touchmove', updatePosition, { passive: true });
 
-    window.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) {
-            updateCursor(e.touches[0].clientX, e.touches[0].clientY);
-            dot.style.opacity = '1';
-            ring.style.opacity = '1';
-        }
-    }, { passive: true });
+    function animate() {
+        // Dot follows with high precision (more responsive)
+        dotX += (mouseX - dotX) * 0.4;
+        dotY += (mouseY - dotY) * 0.4;
 
-    window.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
-            updateCursor(e.touches[0].clientX, e.touches[0].clientY);
-        }
-    }, { passive: true });
+        // Ring follows with smoother lag (more responsive)
+        ringX += (mouseX - ringX) * 0.25;
+        ringY += (mouseY - ringY) * 0.25;
+
+        dot.style.left = dotX + 'px';
+        dot.style.top = dotY + 'px';
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+
+        requestAnimationFrame(animate);
+    }
+    animate();
 }
 
 // ========================================
