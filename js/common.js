@@ -183,6 +183,15 @@ function initCustomCursor() {
 
     if (!dot || !ring) return;
 
+    // Hide custom cursor on touch devices / mobile
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouch) {
+        dot.style.display = 'none';
+        ring.style.display = 'none';
+        document.body.style.cursor = 'default';
+        return;
+    }
+
     window.addEventListener('mousemove', (e) => {
         const x = e.clientX;
         const y = e.clientY;
@@ -209,8 +218,10 @@ class BackgroundSystem {
 
         this.width = 0;
         this.height = 0;
-        this.mouse = { x: 0, y: 0 };
+        this.isMobile = false;
+        this.mouse = { x: 0, y: 0, active: false };
         this.particles = [];
+        this.time = 0;
 
         this.init();
     }
@@ -220,45 +231,61 @@ class BackgroundSystem {
 
         // Add spotlight element
         this.spotlight = document.createElement('div');
-        this.spotlight.style.position = 'fixed';
-        this.spotlight.style.top = '0';
-        this.spotlight.style.left = '0';
-        this.spotlight.style.width = '100vw';
-        this.spotlight.style.height = '100vh';
-        this.spotlight.style.pointerEvents = 'none';
-        this.spotlight.style.zIndex = '0';
+        this.spotlight.className = 'spotlight-bg';
         this.spotlight.style.background = 'radial-gradient(circle at center, rgba(78, 217, 255, 0.08) 0%, transparent 70%)';
-        this.spotlight.style.transition = 'background 0.1s ease';
         document.body.prepend(this.spotlight);
 
         window.addEventListener('resize', () => this.resize());
-        window.addEventListener('mousemove', (e) => {
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
+
+        const handleInteraction = (x, y) => {
+            this.mouse.x = x;
+            this.mouse.y = y;
+            this.mouse.active = true;
 
             // Move spotlight
-            this.spotlight.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(78, 217, 255, 0.12) 0%, transparent 50%)`;
+            this.spotlight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(78, 217, 255, ${this.isMobile ? 0.15 : 0.12}) 0%, transparent 50%)`;
+        };
+
+        window.addEventListener('mousemove', (e) => handleInteraction(e.clientX, e.clientY));
+
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        // Deactivate interaction after some time on touch
+        window.addEventListener('touchend', () => {
+            setTimeout(() => { this.mouse.active = false; }, 3000);
         });
+
         this.animate();
     }
 
     resize() {
         this.width = this.pCanvas.width = this.gCanvas.width = window.innerWidth;
         this.height = this.pCanvas.height = this.gCanvas.height = window.innerHeight;
+        this.isMobile = this.width < 768;
         this.initParticles();
     }
 
     initParticles() {
         this.particles = [];
-        const particleCount = 100; // Increased density for better plexus
+        const particleCount = this.isMobile ? 45 : 100;
 
         for (let i = 0; i < particleCount; i++) {
             this.particles.push({
                 x: Math.random() * this.width,
                 y: Math.random() * this.height,
-                vx: (Math.random() - 0.5) * 0.4, // Slightly faster base movement
-                vy: (Math.random() - 0.5) * 0.4,
-                size: Math.random() * 2 + 0.5,
+                vx: (Math.random() - 0.5) * (this.isMobile ? 0.25 : 0.4),
+                vy: (Math.random() - 0.5) * (this.isMobile ? 0.25 : 0.4),
+                size: Math.random() * (this.isMobile ? 1.5 : 2) + 0.5,
                 pulse: Math.random() * Math.PI,
                 pulseSpeed: 0.02 + Math.random() * 0.03
             });
@@ -268,7 +295,7 @@ class BackgroundSystem {
     drawHexGrid() {
         this.gCtx.clearRect(0, 0, this.width, this.height);
 
-        const size = 60;
+        const size = this.isMobile ? 45 : 60;
         const h = size * Math.sqrt(3);
         const w = size * 2;
 
@@ -282,10 +309,10 @@ class BackgroundSystem {
                 const cy = y;
 
                 const dist = Math.sqrt((this.mouse.x - cx) ** 2 + (this.mouse.y - cy) ** 2);
-                const opacity = Math.max(0.05, 0.4 - dist / 600);
+                const opacity = Math.max(0.05, (this.isMobile ? 0.3 : 0.4) - dist / (this.isMobile ? 400 : 600));
                 this.gCtx.globalAlpha = opacity;
 
-                if (opacity > 0.06) { // Optimization
+                if (opacity > 0.06) {
                     this.gCtx.beginPath();
                     for (let i = 0; i < 6; i++) {
                         const angle = i * Math.PI / 3;
@@ -304,27 +331,24 @@ class BackgroundSystem {
     drawParticles() {
         this.pCtx.clearRect(0, 0, this.width, this.height);
 
-        const connectionDist = 160;
-        const mouseDist = 200;
+        const connectionDist = this.isMobile ? 110 : 160;
+        const mouseDist = this.isMobile ? 140 : 200;
 
         for (let i = 0; i < this.particles.length; i++) {
             const p = this.particles[i];
 
-            // 1. Update Position
             p.x += p.vx;
             p.y += p.vy;
 
-            // 2. Mouse Magnetism
             const dxm = this.mouse.x - p.x;
             const dym = this.mouse.y - p.y;
             const distM = Math.sqrt(dxm * dxm + dym * dym);
 
             if (distM < mouseDist) {
                 const force = (mouseDist - distM) / mouseDist;
-                p.x += dxm * force * 0.02; // Gentle pull
+                p.x += dxm * force * 0.02;
                 p.y += dym * force * 0.02;
 
-                // Mouse to Particle Connection
                 this.pCtx.beginPath();
                 this.pCtx.strokeStyle = '#4ed9ff';
                 this.pCtx.lineWidth = 0.5 * force;
@@ -334,11 +358,9 @@ class BackgroundSystem {
                 this.pCtx.stroke();
             }
 
-            // 3. Screen Bounce
             if (p.x < 0 || p.x > this.width) p.vx *= -1;
             if (p.y < 0 || p.y > this.height) p.vy *= -1;
 
-            // 4. Connect to other particles
             for (let j = i + 1; j < this.particles.length; j++) {
                 const p2 = this.particles[j];
                 const dx = p.x - p2.x;
@@ -358,7 +380,6 @@ class BackgroundSystem {
                 }
             }
 
-            // 5. Draw Particle
             p.pulse += p.pulseSpeed;
             const pulseScale = 0.8 + Math.sin(p.pulse) * 0.2;
 
@@ -368,7 +389,6 @@ class BackgroundSystem {
             this.pCtx.arc(p.x, p.y, p.size * pulseScale, 0, Math.PI * 2);
             this.pCtx.fill();
 
-            // Add inner core for larger particles
             if (p.size > 1.5) {
                 this.pCtx.fillStyle = '#fff';
                 this.pCtx.globalAlpha = 0.8;
@@ -380,6 +400,18 @@ class BackgroundSystem {
     }
 
     animate() {
+        this.time += 0.005;
+
+        // Auto-drift if no interaction
+        if (!this.mouse.active) {
+            this.mouse.x = this.width / 2 + Math.sin(this.time) * (this.width * 0.35);
+            this.mouse.y = this.height / 2 + Math.cos(this.time * 0.7) * (this.height * 0.25);
+
+            if (this.spotlight) {
+                this.spotlight.style.background = `radial-gradient(circle at ${this.mouse.x}px ${this.mouse.y}px, rgba(78, 217, 255, 0.08) 0%, transparent 60%)`;
+            }
+        }
+
         this.drawHexGrid();
         this.drawParticles();
         requestAnimationFrame(() => this.animate());
