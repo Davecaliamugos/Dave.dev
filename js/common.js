@@ -205,13 +205,13 @@ function initCustomCursor() {
     window.addEventListener('touchmove', updatePosition, { passive: true });
 
     function animate() {
-        // Dot follows with high precision (more responsive)
-        dotX += (mouseX - dotX) * 0.4;
-        dotY += (mouseY - dotY) * 0.4;
+        // Dot follows with very high precision (minimum delay)
+        dotX += (mouseX - dotX) * 0.7;
+        dotY += (mouseY - dotY) * 0.7;
 
-        // Ring follows with smoother lag (more responsive)
-        ringX += (mouseX - ringX) * 0.25;
-        ringY += (mouseY - ringY) * 0.25;
+        // Ring follows with responsive lag
+        ringX += (mouseX - ringX) * 0.4;
+        ringY += (mouseY - ringY) * 0.4;
 
         dot.style.left = dotX + 'px';
         dot.style.top = dotY + 'px';
