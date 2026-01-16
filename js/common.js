@@ -183,24 +183,36 @@ function initCustomCursor() {
 
     if (!dot || !ring) return;
 
-    // Hide custom cursor on touch devices / mobile
+    // Show custom cursor even on touch devices
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouch) {
-        dot.style.display = 'none';
-        ring.style.display = 'none';
-        document.body.style.cursor = 'default';
-        return;
-    }
 
-    window.addEventListener('mousemove', (e) => {
-        const x = e.clientX;
-        const y = e.clientY;
+    // Hide default cursor globally
+    document.body.style.cursor = 'none';
 
+    const updateCursor = (x, y) => {
         dot.style.left = x + 'px';
         dot.style.top = y + 'px';
         ring.style.left = x + 'px';
         ring.style.top = y + 'px';
+    };
+
+    window.addEventListener('mousemove', (e) => {
+        updateCursor(e.clientX, e.clientY);
     });
+
+    window.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+            updateCursor(e.touches[0].clientX, e.touches[0].clientY);
+            dot.style.opacity = '1';
+            ring.style.opacity = '1';
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            updateCursor(e.touches[0].clientX, e.touches[0].clientY);
+        }
+    }, { passive: true });
 }
 
 // ========================================
@@ -277,15 +289,15 @@ class BackgroundSystem {
 
     initParticles() {
         this.particles = [];
-        const particleCount = this.isMobile ? 45 : 100;
+        const particleCount = this.isMobile ? 75 : 150; // Grand density
 
         for (let i = 0; i < particleCount; i++) {
             this.particles.push({
                 x: Math.random() * this.width,
                 y: Math.random() * this.height,
-                vx: (Math.random() - 0.5) * (this.isMobile ? 0.25 : 0.4),
-                vy: (Math.random() - 0.5) * (this.isMobile ? 0.25 : 0.4),
-                size: Math.random() * (this.isMobile ? 1.5 : 2) + 0.5,
+                vx: (Math.random() - 0.5) * (this.isMobile ? 0.35 : 0.5),
+                vy: (Math.random() - 0.5) * (this.isMobile ? 0.35 : 0.5),
+                size: Math.random() * (this.isMobile ? 3 : 4.5) + 1.2, // Even bigger particles
                 pulse: Math.random() * Math.PI,
                 pulseSpeed: 0.02 + Math.random() * 0.03
             });
@@ -295,12 +307,12 @@ class BackgroundSystem {
     drawHexGrid() {
         this.gCtx.clearRect(0, 0, this.width, this.height);
 
-        const size = this.isMobile ? 45 : 60;
+        const size = this.isMobile ? 60 : 80; // Larger hexagons
         const h = size * Math.sqrt(3);
         const w = size * 2;
 
         this.gCtx.strokeStyle = '#4ed9ff';
-        this.gCtx.lineWidth = 1;
+        this.gCtx.lineWidth = this.isMobile ? 2 : 2.5; // Bolder lines
 
         for (let y = -h; y < this.height + h; y += h * 0.86) {
             for (let x = -w; x < this.width + w; x += w * 0.75) {
@@ -309,10 +321,10 @@ class BackgroundSystem {
                 const cy = y;
 
                 const dist = Math.sqrt((this.mouse.x - cx) ** 2 + (this.mouse.y - cy) ** 2);
-                const opacity = Math.max(0.05, (this.isMobile ? 0.3 : 0.4) - dist / (this.isMobile ? 400 : 600));
+                const opacity = Math.max(0.06, (this.isMobile ? 0.3 : 0.4) - dist / (this.isMobile ? 500 : 800)); // Subtler grid
                 this.gCtx.globalAlpha = opacity;
 
-                if (opacity > 0.06) {
+                if (opacity > 0.12) {
                     this.gCtx.beginPath();
                     for (let i = 0; i < 6; i++) {
                         const angle = i * Math.PI / 3;
@@ -331,8 +343,8 @@ class BackgroundSystem {
     drawParticles() {
         this.pCtx.clearRect(0, 0, this.width, this.height);
 
-        const connectionDist = this.isMobile ? 110 : 160;
-        const mouseDist = this.isMobile ? 140 : 200;
+        const connectionDist = this.isMobile ? 180 : 260; // Huge connections
+        const mouseDist = this.isMobile ? 200 : 320;
 
         for (let i = 0; i < this.particles.length; i++) {
             const p = this.particles[i];
@@ -372,8 +384,8 @@ class BackgroundSystem {
                     const force = 1 - dist / connectionDist;
                     this.pCtx.beginPath();
                     this.pCtx.strokeStyle = '#4ed9ff';
-                    this.pCtx.lineWidth = force * 0.8;
-                    this.pCtx.globalAlpha = force * 0.25;
+                    this.pCtx.lineWidth = force * (this.isMobile ? 1.2 : 1.5);
+                    this.pCtx.globalAlpha = force * 0.25; // Less distracting lines
                     this.pCtx.moveTo(p.x, p.y);
                     this.pCtx.lineTo(p2.x, p2.y);
                     this.pCtx.stroke();
@@ -408,7 +420,7 @@ class BackgroundSystem {
             this.mouse.y = this.height / 2 + Math.cos(this.time * 0.7) * (this.height * 0.25);
 
             if (this.spotlight) {
-                this.spotlight.style.background = `radial-gradient(circle at ${this.mouse.x}px ${this.mouse.y}px, rgba(78, 217, 255, 0.08) 0%, transparent 60%)`;
+                this.spotlight.style.background = `radial-gradient(circle at ${this.mouse.x}px ${this.mouse.y}px, rgba(78, 217, 255, 0.05) 0%, transparent 60%)`;
             }
         }
 

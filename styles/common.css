@@ -24,14 +24,7 @@ body {
     color: var(--white);
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
-    cursor: none;
-}
-
-/* On devices that don't support hover (touch), restore cursor */
-@media (hover: none) and (pointer: coarse) {
-    body {
-        cursor: default;
-    }
+    cursor: none !important;
 }
 
 /* Canvas Background Elements */
@@ -45,12 +38,16 @@ canvas {
 
 #gridCanvas {
     z-index: 1;
-    opacity: 0.25;
+    opacity: 0.15;
+    /* Dimmed for better text contrast */
 }
 
 #particleCanvas {
     z-index: 2;
-    filter: blur(0.4px) brightness(1.1);
+    filter: blur(0.4px) brightness(0.9);
+    /* Reduced brightness */
+    opacity: 0.7;
+    /* Added opacity control */
 }
 
 .spotlight-bg {

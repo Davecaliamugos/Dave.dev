@@ -35,6 +35,8 @@
             flex: 1;
             max-width: 500px;
             pointer-events: none;
+            margin-top: -40px;
+            /* Shifted upwards */
         }
 
         .intro-section h1 {
@@ -215,15 +217,25 @@
 
 
             .id-container {
-                height: 500px;
+                height: 600px;
                 width: 100%;
                 margin-left: 0;
-                margin-top: 40px;
+                margin-top: 50px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                /* Start from top for precise yarn control */
+                padding-top: 0;
             }
 
             .id-card {
                 width: 240px;
                 height: 340px;
+                margin-top: 60px;
+                /* Aligned with hook */
+                padding-top: 0;
+                /* Let details center naturally */
             }
 
             .photo-slot {
@@ -241,7 +253,8 @@
             }
 
             #lanyard-hook {
-                top: 30px;
+                top: 60px;
+                /* Fixed distance for yarn line */
             }
         }
 
