@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#010409">
     <link rel="icon" href="/assets/img/mylogo.png" type="image/png">
-    <title>Portfolio | Secure Terminal</title>
+    <title>Portfolio | Contact</title>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap"
@@ -20,6 +20,8 @@
             z-index: 10;
             padding: 140px 8% 80px;
             width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .content-wrapper {
@@ -41,6 +43,16 @@
             border-radius: 20px;
             padding: 50px;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--cyan);
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(78, 217, 255, 0.3);
+            text-align: center;
         }
 
         .contact-info h1 {
@@ -55,7 +67,8 @@
             color: rgba(255, 255, 255, 0.7);
             line-height: 1.6;
             margin-bottom: 40px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
+            /* Slight reduction */
         }
 
         .info-item {
@@ -102,6 +115,7 @@
 
         .social-grid {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             margin-top: 30px;
         }
@@ -212,39 +226,115 @@
         }
 
         /* Responsive */
-        @media (max-width: 900px) {
-            .content-wrapper {
+        @media (max-width: 1024px) {
+            .page-wrapper {
                 padding: 120px 5% 50px;
             }
 
             .contact-container {
-                grid-template-columns: 1fr;
                 gap: 40px;
-                padding: 30px;
+                padding: 40px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .contact-info {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .contact-info h1 {
                 font-size: 2.5rem;
             }
+
+            .contact-info p {
+                max-width: 500px;
+            }
+
+            .info-item {
+                text-align: left;
+                width: 100%;
+                max-width: 320px;
+                justify-content: flex-start;
+            }
+
+            .social-grid {
+                justify-content: center;
+            }
+
+            .map-section {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 100px 20px 50px;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+                margin-bottom: 30px;
+            }
+
+            .contact-container {
+                padding: 30px 25px;
+            }
+
+            .map-section {
+                height: 250px;
+                border-radius: 15px;
+            }
         }
 
         @media (max-width: 480px) {
+            .page-wrapper {
+                padding: 90px 15px 40px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
             .contact-container {
-                padding: 20px;
+                padding: 25px 20px;
             }
 
             .contact-info h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .info-item {
                 gap: 12px;
+                margin-bottom: 20px;
             }
 
             .icon-box {
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
+            }
+
+            .social-grid {
+                gap: 10px;
+            }
+
+            .social-item {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .submit-btn {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -267,10 +357,10 @@
         <h1 class="page-title reveal delay-1">CONTACT</h1>
         <div class="content-wrapper">
             <div class="map-section reveal delay-3">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.603332463773!2d123.2750!3d12.2250!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a165fc92c90c73%3A0x67c0f18c64448e8a!2sCabitan%2C%20Mandaon%2C%20Masbate!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
-                        allowfullscreen="" loading="lazy"></iframe>
-                </div>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.603332463773!2d123.2750!3d12.2250!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a165fc92c90c73%3A0x67c0f18c64448e8a!2sCabitan%2C%20Mandaon%2C%20Masbate!5e0!3m2!1sen!2sph!4v1700000000000!5m2!1sen!2sph"
+                    allowfullscreen="" loading="lazy"></iframe>
+            </div>
             <div class="contact-container">
                 <!-- Left Info -->
                 <div class="contact-info reveal delay-1">
@@ -296,17 +386,17 @@
                     </div>
 
                     <div class="social-grid">
-                        <a href="https://facebook.com" class="social-item" title="Facebook"><i
+                        <a href="https://www.facebook.com/dave.mathew.campo" class="social-item" title="Facebook"><i
                                 class="fab fa-facebook-f"></i></a>
-                        <a href="https://instagram.com" class="social-item" title="Instagram"><i
+                        <a href="https://www.instagram.com/evad_zti" class="social-item" title="Instagram"><i
                                 class="fab fa-instagram"></i></a>
-                        <a href="https://wa.me/yourphone" class="social-item" title="WhatsApp"><i
+                        <a href="https://wa.me/+639853722519" class="social-item" title="WhatsApp"><i
                                 class="fab fa-whatsapp"></i></a>
-                        <a href="https://linkedin.com" class="social-item" title="LinkedIn"><i
+                        <a href="https://www.linkedin.com/in/dave-campo-666a57386/" class="social-item" title="LinkedIn"><i
                                 class="fab fa-linkedin-in"></i></a>
-                        <a href="https://github.com" class="social-item" title="GitHub"><i
+                        <a href="https://github.com/Davecaliamugos/" class="social-item" title="GitHub"><i
                                 class="fab fa-github"></i></a>
-                        <a href="mailto:yourgmail@gmail.com" class="social-item" title="Gmail"><i
+                        <a href="mailto:lorin4196@gmail.com" class="social-item" title="Gmail"><i
                                 class="fas fa-envelope"></i></a>
                     </div>
                 </div>
