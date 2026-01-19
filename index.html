@@ -43,6 +43,249 @@
             color: var(--cyan);
             margin-bottom: 20px;
             text-shadow: 0 0 20px rgba(78, 217, 255, 0.4);
+            position: relative;
+            display: inline-block;
+        }
+
+        .intro-section h1::before,
+        .intro-section h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .intro-section h1::before {
+            left: 2px;
+            text-shadow: -1px 0 rgba(255,0,255,0.6);
+            clip-path: inset(44% 0 56% 0);
+            opacity: 0.6;
+            animation: glitch-anim 8s infinite ease-in-out alternate-reverse;
+        }
+
+        .intro-section h1::after {
+            left: -2px;
+            text-shadow: -1px 0 rgba(0,255,255,0.6);
+            clip-path: inset(44% 0 56% 0);
+            opacity: 0.6;
+            animation: glitch-anim2 3.5s infinite ease-in-out alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip-path: inset(31% 0 94% 0);
+                transform: skew(0.85deg);
+            }
+
+            5% {
+                clip-path: inset(70% 0 71% 0);
+                transform: skew(0.55deg);
+            }
+
+            10% {
+                clip-path: inset(98% 0 32% 0);
+                transform: skew(0.24deg);
+            }
+
+            15% {
+                clip-path: inset(66% 0 10% 0);
+                transform: skew(0.48deg);
+            }
+
+            20% {
+                clip-path: inset(81% 0 81% 0);
+                transform: skew(0.88deg);
+            }
+
+            25% {
+                clip-path: inset(48% 0 49% 0);
+                transform: skew(0.22deg);
+            }
+
+            30% {
+                clip-path: inset(59% 0 4% 0);
+                transform: skew(0.19deg);
+            }
+
+            35% {
+                clip-path: inset(66% 0 15% 0);
+                transform: skew(0.95deg);
+            }
+
+            40% {
+                clip-path: inset(40% 0 99% 0);
+                transform: skew(0.95deg);
+            }
+
+            45% {
+                clip-path: inset(46% 0 72% 0);
+                transform: skew(0.25deg);
+            }
+
+            50% {
+                clip-path: inset(9% 0 53% 0);
+                transform: skew(0.04deg);
+            }
+
+            55% {
+                clip-path: inset(98% 0 47% 0);
+                transform: skew(0.05deg);
+            }
+
+            60% {
+                clip-path: inset(63% 0 100% 0);
+                transform: skew(0.96deg);
+            }
+
+            65% {
+                clip-path: inset(2% 0 42% 0);
+                transform: skew(0.51deg);
+            }
+
+            70% {
+                clip-path: inset(80% 0 40% 0);
+                transform: skew(0.28deg);
+            }
+
+            75% {
+                clip-path: inset(35% 0 66% 0);
+                transform: skew(0.6deg);
+            }
+
+            80% {
+                clip-path: inset(58% 0 60% 0);
+                transform: skew(0.09deg);
+            }
+
+            85% {
+                clip-path: inset(64% 0 83% 0);
+                transform: skew(0.58deg);
+            }
+
+            90% {
+                clip-path: inset(31% 0 40% 0);
+                transform: skew(0.36deg);
+            }
+
+            95% {
+                clip-path: inset(32% 0 20% 0);
+                transform: skew(0.57deg);
+            }
+
+            100% {
+                clip-path: inset(53% 0 48% 0);
+                transform: skew(0.41deg);
+            }
+        }
+
+        @keyframes glitch-anim2 {
+            0% {
+                clip-path: inset(25% 0 100% 0);
+                transform: skew(0.43deg);
+            }
+
+            5% {
+                clip-path: inset(65% 0 88% 0);
+                transform: skew(0.2deg);
+            }
+
+            10% {
+                clip-path: inset(54% 0 100% 0);
+                transform: skew(1deg);
+            }
+
+            15% {
+                clip-path: inset(92% 0 12% 0);
+                transform: skew(0.69deg);
+            }
+
+            20% {
+                clip-path: inset(98% 0 14% 0);
+                transform: skew(0.79deg);
+            }
+
+            25% {
+                clip-path: inset(4% 0 10% 0);
+                transform: skew(0.32deg);
+            }
+
+            30% {
+                clip-path: inset(43% 0 41% 0);
+                transform: skew(0.81deg);
+            }
+
+            35% {
+                clip-path: inset(100% 0 19% 0);
+                transform: skew(0.06deg);
+            }
+
+            40% {
+                clip-path: inset(10% 0 30% 0);
+                transform: skew(0.57deg);
+            }
+
+            45% {
+                clip-path: inset(15% 0 12% 0);
+                transform: skew(0.1deg);
+            }
+
+            50% {
+                clip-path: inset(4% 0 46% 0);
+                transform: skew(0.79deg);
+            }
+
+            55% {
+                clip-path: inset(50% 0 5% 0);
+                transform: skew(0.38deg);
+            }
+
+            60% {
+                clip-path: inset(11% 0 47% 0);
+                transform: skew(0.77deg);
+            }
+
+            65% {
+                clip-path: inset(88% 0 1% 0);
+                transform: skew(0.98deg);
+            }
+
+            70% {
+                clip-path: inset(10% 0 12% 0);
+                transform: skew(0.52deg);
+            }
+
+            75% {
+                clip-path: inset(98% 0 15% 0);
+                transform: skew(0.83deg);
+            }
+
+            80% {
+                clip-path: inset(4% 0 53% 0);
+                transform: skew(0.56deg);
+            }
+
+            85% {
+                clip-path: inset(45% 0 41% 0);
+                transform: skew(0.72deg);
+            }
+
+            90% {
+                clip-path: inset(31% 0 60% 0);
+                transform: skew(0.6deg);
+            }
+
+            95% {
+                clip-path: inset(47% 0 73% 0);
+                transform: skew(0.74deg);
+            }
+
+            100% {
+                clip-path: inset(92% 0 61% 0);
+                transform: skew(0.38deg);
+            }
         }
 
         .intro-section p {
@@ -343,7 +586,7 @@
 
     <div class="main-wrapper">
         <div class="intro-section reveal delay-1">
-            <h1>DAVE CAMPO</h1>
+            <h1 data-text="DAVE CAMPO">DAVE CAMPO</h1>
             <p>
                 I am <span id="typing-text"></span>
                 <span class="hero-desc">3rd Year Computer Science student and aspiring Developer specializing in
